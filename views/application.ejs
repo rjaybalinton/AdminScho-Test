@@ -1,0 +1,310 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Applications</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f4f4f4;
+                margin: 0;
+                padding: 20px;
+            }
+
+            h1 {
+                text-align: center;
+                color: #333;
+            }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+
+            th, td {
+                padding: 10px;
+                text-align: left;
+                border: 1px solid #ccc;
+            }
+
+            th {
+                background-color: #28a745;
+                color: white;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .search-container {
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            .search-container input[type="text"] {
+                padding: 8px;
+                width: 200px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            .search-container button {
+                padding: 8px 12px;
+                background-color: #28a745;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .search-container button:hover {
+                background-color: #218838;
+            }
+
+            .show-all-button {
+                display: inline-block;
+                padding: 8px 12px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 10px;
+            }
+
+            .show-all-button:hover {
+                background-color: #0056b3;
+            }
+            .modal {
+                display: none; 
+                position: fixed; 
+                z-index: 1; 
+                left: 0;
+                top: 0;
+                width: 100%; 
+                height: 100%; 
+                overflow: auto; 
+                background-color: rgb(0,0,0); 
+                background-color: rgba(0,0,0,0.4); 
+            }
+
+            .modal-content {
+                background-color: #fefefe;
+                margin: 15% auto; 
+                padding: 20px;
+                border: 1px solid #888;
+                width: 80%; 
+            }
+
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+            }
+
+            .close:hover,
+            .close:focus {
+                color: black;
+                text-decoration: none;
+                cursor: pointer;
+            }
+            .search-and-add-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .add-student-button {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        .add-student-button:hover {
+            background-color: #218838;
+        }
+        </style>
+    </head>
+    <body>
+        <%- include('partials/header') %>
+        <h1>Student Applications</h1>
+        <div class="search-and-add-container">
+            <!-- Button to open "Add Student" Modal -->
+            <button onclick="openAddStudentModal()" class="add-student-button">Add Student</button>
+            
+            
+            
+        <div class="search-container">
+            
+            <form action="/search" method="GET" style="margin-bottom: 20px;">
+                <input type="text" name="search" placeholder="Enter Student ID or Number" required>
+                <button type="submit">Search</button>
+            </form>
+            <!-- Show All Button -->
+            <form action="/application" method="GET" style="display: inline;">
+                <button type="submit" class="show-all-button">Show All</button>
+            </form>
+            
+            
+        </div>
+    </div>
+    <!-- Modal for Adding New Student -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Add New Student</h2>
+            <form action="/addStudent" method="POST">
+                <label for="student_id">Student ID:</label>
+                <input type="text" id="student_id" name="student_id" required> <!-- Added Student ID field -->
+               
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" required>
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" required>
+                <label for="middle_initial">Middle Initial:</label>
+                <input type="text" id="middle_initial" name="middle_initial">
+                <label for="degree_program">Degree Program:</label>
+                <input type="text" id="degree_program" name="degree_program" required>
+                <label for="year_level">Year Level:</label>
+                <input type="number" id="year_level" name="year_level" required>
+                <label for="gmail">Gmail:</label>
+                <input type="email" id="gmail" name="gmail" required>
+                <label for="phone_number">Phone Number:</label>
+                <input type="text" id="phone_number" name="phone_number" required>
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="graduate">Graduate</option>
+                    <option value="enrolled">Enrolled</option>
+                    <option value="not_enrolled">Not Enrolled</option>
+                </select>
+                <label for="zip_code">Zip Code:</label>
+                <input type="text" id="zip_code" name="zip_code" required>
+                <label for="enrolled_units">Enrolled Units:</label>
+                <input type="number" id="enrolled_units" name="enrolled_units" required>
+                <button type="submit" class="show-all-button">Save Student</button>
+            </form>
+        </div>
+    </div>
+        
+    <table>
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Student Number</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Middle Initial</th>
+                <th>Degree Program</th>
+                <th>Year Level</th>
+                <th>Gmail</th>
+                <th>Phone Number</th>
+                <th>Status</th>
+                <th>Zip Code</th>
+                <th>Enrolled Units</th>
+                <th>Actions</th> <!-- New Actions Column -->
+            </tr>
+        </thead>
+        <tbody>
+            <% students.forEach(student => { %>
+                <tr>
+                    <td><%= student.student_id %></td>
+                    <td><%= student.student_number %></td>
+                    <td><%= student.first_name %></td>
+                    <td><%= student.last_name %></td>
+                    <td><%= student.middle_initial || 'N/A' %></td>
+                    <td><%= student.degree_program %></td>
+                    <td><%= student.year_level %></td>
+                    <td><%= student.gmail %></td>
+                    <td><%= student.phone_number %></td>
+                    <td><%= student.status %></td>
+                    <td><%= student.zip_code %></td>
+                    <td><%= student.enrolled_units %></td>
+                    <td>
+                        <button class="view-button" onclick="openViewModal('<%= JSON.stringify(student) %>')">View</button> <!-- View Button -->
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <!-- Modal for Viewing Student Details -->
+    <div id="viewStudentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeViewModal()">&times;</span>
+            <h2>Student Details</h2>
+            <div id="student-details"></div> <!-- Details will be populated here -->
+        </div>
+    </div>
+    <script>
+        // Function to open the view modal
+        function openViewModal(student) {
+            const studentData = JSON.parse(student);
+            const details = `
+                <p><strong>Student ID:</strong> ${studentData.student_id}</p>
+                <p><strong>Student Number:</strong> ${studentData.student_number}</p>
+                <p><strong>First Name:</strong> ${studentData.first_name}</p>
+                <p><strong>Last Name:</strong> ${studentData.last_name}</p>
+                <p><strong>Middle Initial:</strong> ${studentData.middle_initial || 'N/A'}</p>
+                <p><strong>Degree Program:</strong> ${studentData.degree_program}</p>
+                <p><strong>Year Level:</strong> ${studentData.year_level}</p>
+                <p><strong>Gmail:</strong> ${studentData.gmail}</p>
+                <p><strong>Phone Number:</strong> ${studentData.phone_number}</p>
+                <p><strong>Status:</strong> ${studentData.status}</p>
+                <p><strong>Zip Code:</strong> ${studentData.zip_code}</p>
+                <p><strong>Enrolled Units:</strong> ${studentData.enrolled_units}</p>
+            `;
+            document.getElementById('student-details').innerHTML = details;
+            document.getElementById("viewStudentModal").style.display = "block"; // Show modal
+        }
+
+        // Function to close the view modal
+        function closeViewModal() {
+            document.getElementById("viewStudentModal").style.display = "none"; // Hide modal
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById("viewStudentModal");
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
+        <script>
+            // Get the modal
+            var modal = document.getElementById("addStudentModal");
+        
+            // Get the button that opens the modal
+            var btn = document.createElement("button");
+            btn.innerHTML = "Add Student";
+            btn.className = "show-all-button";
+            btn.onclick = function() {
+                modal.style.display = "block";
+            }
+            document.body.insertBefore(btn, document.body.firstChild);
+        
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+        
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+        
+            // When the user clicks anywhere outside of the modal, close it
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+    </body>
+    </html>
